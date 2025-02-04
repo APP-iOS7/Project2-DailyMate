@@ -18,7 +18,7 @@ class PreviewContainer {
     
     init() {
         let schema = Schema([
-            Item.self,
+            DayItem.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema,
                                                     isStoredInMemoryOnly: true,
@@ -43,7 +43,7 @@ class PreviewContainer {
         ]
         
         for (title, date) in items {
-            let item = Item(timestamp: date, title: title)
+            let item = DayItem(timestamp: date, title: title)
             container.mainContext.insert(item)
         }
         

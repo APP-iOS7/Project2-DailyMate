@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Item: Identifiable {
+final class DayItem: Identifiable {
     var id: UUID
     var timestamp: Date
     var title: String

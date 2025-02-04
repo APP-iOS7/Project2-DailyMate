@@ -11,11 +11,11 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query private var items: [DayItem]
     
     @State private var isPresentingAddAlert = false
     
-    /// Error Alert(이미 오늘 날짜가 존재할 때) 표시 여부
+    // Error Alert(이미 오늘 날짜가 존재할 때) 표시 여부
     @State private var isPresentingErrorAlert = false
 
     @State private var newTitle: String = ""
@@ -70,7 +70,7 @@ struct ContentView: View {
                     Button("Save") {
                         // 입력한 Title로 새 아이템 생성
                         withAnimation {
-                            let newItem = Item(timestamp: Date(), title: newTitle)
+                            let newItem = DayItem(timestamp: Date(), title: newTitle)
                             modelContext.insert(newItem)
                         }
                         // Alert 닫히면서 초기화
@@ -97,13 +97,14 @@ struct ContentView: View {
         formatter.dateFormat = "yyyy년 M월 d일"
         return formatter
     }()
-    /// 오늘 날짜에 해당하는 아이템이 이미 있는지 확인하는 함수
+    // 오늘 날짜에 해당하는 아이템이 이미 있는지 확인하는 함수
     private func hasItemForToday() -> Bool {
         // Swift에서 날짜 비교 시 Calendar를 이용하여 "연/월/일" 단위만 비교할 수 있음
         // isDateInToday()를 활용해도 됩니다.
         return items.contains { Calendar.current.isDateInToday($0.timestamp) }
     }
 
+    // 아이템 삭제하는 함수
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
@@ -115,6 +116,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-//        .modelContainer(for: Item.self, inMemory: true)
         .modelContainer(PreviewContainer.shared.container)
 }
