@@ -11,41 +11,47 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
-
+    
+    private var falseItems: [String] = ["2/4", "2/3", "2/2"]
+    
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+                ForEach(falseItems, id: \.self) { item in
+                    NavigationLink(value: "", label: {
+                        DailyListCell(text: item)
+                    })
                 }
             }
-        } detail: {
-            Text("Select an item")
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarLeading, content: {
+                    Text("Daily Mate")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                })
+                ToolbarItem(placement: .topBarTrailing, content: {
+                    Button("", systemImage: "plus", action: {
+                        
+                    })
+                    .tint(.black)
+                })
+            })
+            .scrollContentBackground(.hidden)
+            .navigationDestination(for: String.self) { _ in
+                DayView()
+            }
+            
         }
+        .padding(.top, 10)
     }
-
+    
     private func addItem() {
         withAnimation {
             let newItem = Item(timestamp: Date())
             modelContext.insert(newItem)
         }
     }
-
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
