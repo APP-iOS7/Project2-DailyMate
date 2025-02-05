@@ -56,9 +56,6 @@ struct ContentView: View {
                 }
                 .navigationTitle(Text("Daily Mate"))
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
-                    }
                     ToolbarItem {
                         Button(action: {
                             isPresentingAddSheet = true // sheet 표시
@@ -94,7 +91,7 @@ struct ContentView: View {
                                      selection: $selectedDate,
                                      displayedComponents: .date)
                         }
-                        .navigationTitle("새 항목 추가")
+                        .navigationTitle("항목 추가")
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
                             ToolbarItem(placement: .cancellationAction) {
