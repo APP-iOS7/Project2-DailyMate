@@ -7,13 +7,20 @@
 
 import SwiftUI
 
+enum PlanEditMode {
+    case create
+    case update(Plan)
+}
+
 struct PlanView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @State private var start: Date = Date()
     @State private var end: Date = Date()
     @State private var content: String = ""
     @State private var point: String = ""
-    @Binding var plans: [Plan]
+    let item: DayItem
+    let mode: PlanEditMode
     
     var body: some View {
         VStack(spacing: 20) {
@@ -68,9 +75,33 @@ struct PlanView: View {
         .padding()
     }
     
+    init(item: DayItem, mode: PlanEditMode) {
+        self.item = item
+        self.mode = mode
+        
+        switch mode {
+        case .create: break
+        case .update(let plan):
+            _start = State(initialValue: plan.start)
+            _end = State(initialValue: plan.end)
+            _content = State(initialValue: plan.content)
+            _point = State(initialValue: plan.point)
+        }
+    }
+    
     func addPlan() {
-        let item: Plan = Plan(start: start, end: end, content: content, point: point)
-        plans.append(item)
+        let newPlan: Plan = Plan(start: start, end: end, content: content, point: point)
+        
+        switch mode {
+        case .create:
+            item.plan.append(newPlan)
+        case .update(let oldPlan):
+            if let index = item.plan.firstIndex(of: oldPlan) {
+                item.plan[index] = newPlan
+            }
+        }
+        
+        try? modelContext.save()
         dismiss()
     }
 }

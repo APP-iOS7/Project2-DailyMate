@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Plan: Codable, Identifiable {
+struct Plan: Codable, Identifiable, Equatable {
     var id: String = UUID().uuidString
     var start: Date
     var end: Date
