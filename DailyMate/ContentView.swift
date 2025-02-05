@@ -13,19 +13,37 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [DayItem]
     
-    @State private var isPresentingAddAlert = false
+    // 아이템 추가 알림 표시 여부
+    @State private var isPresentingAddSheet = false
     
     // Error Alert(이미 오늘 날짜가 존재할 때) 표시 여부
     @State private var isPresentingErrorAlert = false
 
+    // 새로운 아이템 제목
     @State private var newTitle: String = ""
+
+    // 선택된 날짜
+    @State private var selectedDate: Date = Date()
+    
+    // 상세 화면으로 이동 여부
+    @State private var navigateToDetail: Bool = false
+    
+    // 새로운 아이템
+    @State private var newItem: DayItem?
+
+    @State private var itemToDelete: IndexSet?
+
+    @State private var showingDeleteAlert = false
     
     var body: some View {
         TabView {
             NavigationStack {
                 List {
-                    ForEach(items.sorted(by: {$0.timestamp > $1.timestamp})) { item in
+                    // 아이템 목록 표시 - 날짜를 최근 날짜가 먼저 표시되도록 정렬
+                    let sortedItems = items.sorted(by: {$0.timestamp > $1.timestamp})
+                    ForEach(sortedItems) { item in
                         NavigationLink {
+                            // 상세 화면으로 이동
                             DetailView(item: item)
                         } label: {
                             HStack {
@@ -35,7 +53,10 @@ struct ContentView: View {
                             
                         }
                     }
-                    .onDelete(perform: deleteItems)
+                    .onDelete(perform: { indexSet in
+                        itemToDelete = indexSet
+                        showingDeleteAlert = true
+                    })
                 }
                 .navigationTitle(Text("Daily Mate"))
                 .toolbar {
@@ -44,11 +65,7 @@ struct ContentView: View {
                     }
                     ToolbarItem {
                         Button(action: {
-                            if hasItemForToday() {
-                                isPresentingErrorAlert = true
-                            } else {
-                                isPresentingAddAlert = true
-                            }
+                            isPresentingAddSheet = true // sheet 표시
                         }) {
                             Label("Add Item", systemImage: "plus")
                             
@@ -60,24 +77,66 @@ struct ContentView: View {
                 } message: {
                     Text("하루에는 하나의 아이템만 추가할 수 있습니다.")
                 }
-                
-                .alert("Add New Item", isPresented: $isPresentingAddAlert) {
-                    TextField("Enter Title", text: $newTitle)
-                    Button("Cancel", role: .cancel) {
-                        // Alert 닫히면서 초기화
-                        newTitle = ""
+                .alert("삭제 확인", isPresented: $showingDeleteAlert) {
+                    Button("취소", role: .cancel) {
+                        itemToDelete = nil
                     }
-                    Button("Save") {
-                        // 입력한 Title로 새 아이템 생성
-                        withAnimation {
-                            let newItem = DayItem(timestamp: Date(), title: newTitle)
-                            modelContext.insert(newItem)
+                    Button("삭제", role: .destructive) {
+                        if let indexSet = itemToDelete {
+                            deleteItems(ids: indexSet)
                         }
-                        // Alert 닫히면서 초기화
-                        newTitle = ""
+                        itemToDelete = nil
                     }
                 } message: {
-                    Text("Please enter a title for the new item.")
+                    Text("정말로 삭제하시겠습니까?")
+                }
+                .sheet(isPresented: $isPresentingAddSheet) {
+                    NavigationStack {
+                        Form {
+                            TextField("제목", text: $newTitle)
+                            DatePicker("날짜 선택", 
+                                     selection: $selectedDate,
+                                     displayedComponents: .date)
+                        }
+                        .navigationTitle("새 항목 추가")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("취소") {
+                                    isPresentingAddSheet = false
+                                    newTitle = ""
+                                    selectedDate = Date()
+                                }
+                            }
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("저장") {
+                                    if hasItemForDate(selectedDate) {
+                                        isPresentingErrorAlert = true
+                                    } else {
+                                        withAnimation {
+                                            let item = DayItem(timestamp: selectedDate, title: newTitle)
+                                            modelContext.insert(item)
+                                            newItem = item
+                                            navigateToDetail = true
+                                        }
+                                        isPresentingAddSheet = false
+                                        newTitle = ""
+                                        selectedDate = Date()
+                                    }
+                                }
+                            }
+                        }
+                        .alert("해당 날짜는 이미 추가되었습니다.", isPresented: $isPresentingErrorAlert) {
+                            Button("확인", role: .cancel) { }
+                        } message: {
+                            Text("하루에는 하나의 아이템만 추가할 수 있습니다.")
+                        }
+                    }
+                }
+                .navigationDestination(isPresented: $navigateToDetail) {
+                    if let item = newItem {
+                        DetailView(item: item)
+                    }
                 }
             }
 //            .tabItem {
@@ -88,8 +147,6 @@ struct ContentView: View {
 //                    Label("행운메시지", Image(systemName: "bookmarks"))
 //                }
         }
-        
-//
     }
     // DateFormatter를 하나 만들어 둔다.
     private let dateFormatter: DateFormatter = {
@@ -97,18 +154,19 @@ struct ContentView: View {
         formatter.dateFormat = "yyyy년 M월 d일"
         return formatter
     }()
-    // 오늘 날짜에 해당하는 아이템이 이미 있는지 확인하는 함수
-    private func hasItemForToday() -> Bool {
-        // Swift에서 날짜 비교 시 Calendar를 이용하여 "연/월/일" 단위만 비교할 수 있음
-        // isDateInToday()를 활용해도 됩니다.
-        return items.contains { Calendar.current.isDateInToday($0.timestamp) }
+
+    // 특정 날짜에 해당하는 아이템이 이미 있는지 확인하는 함수
+    private func hasItemForDate(_ date: Date) -> Bool {
+        return items.contains { Calendar.current.isDate($0.timestamp, inSameDayAs: date) }
     }
 
-    // 아이템 삭제하는 함수
-    private func deleteItems(offsets: IndexSet) {
+    // 아이템 삭제하는 함수 수정
+    private func deleteItems(ids: IndexSet) {
         withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+            ids.forEach { id in
+                if let item = items.first(where: { $0.id == id }) {
+                    modelContext.delete(item)
+                }
             }
         }
     }
