@@ -10,7 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query private var dailyItems: [DailyItem]
     
     private var falseItems: [String] = ["2/4", "2/3", "2/2"]
     
@@ -20,9 +20,12 @@ struct ContentView: View {
                 ForEach(falseItems, id: \.self) { item in
                     NavigationLink(value: "", label: {
                         DailyListCell(text: item)
+                            
                     })
                 }
+                .listRowBackground(Color(UIColor.systemGray6))
             }
+            
             .toolbar(content: {
                 ToolbarItem(placement: .topBarLeading, content: {
                     Text("Daily Mate")
@@ -30,8 +33,10 @@ struct ContentView: View {
                         .fontWeight(.bold)
                 })
                 ToolbarItem(placement: .topBarTrailing, content: {
-                    Button("", systemImage: "plus", action: {
+                    Button(action: {
                         
+                    }, label: {
+                        Label("", systemImage: "plus")
                     })
                     .tint(.black)
                 })
@@ -47,15 +52,14 @@ struct ContentView: View {
     
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+            //modelContext.insert()
         }
     }
     
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                modelContext.delete(items[index])
+                //modelContext.delete()
             }
         }
     }
@@ -63,5 +67,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: DailyItem.self, inMemory: true)
 }

@@ -9,10 +9,12 @@ import Foundation
 import SwiftData
 
 @Model
-final class Item {
-    var timestamp: Date
+final class DailyItem {
+    var days: [Day] = []
+    var drawTime: Date
+    var luckyMessages: [String] = []
     
     init(timestamp: Date) {
-        self.timestamp = timestamp
+        self.drawTime = timestamp
     }
 }

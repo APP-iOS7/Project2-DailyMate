@@ -11,34 +11,34 @@ struct DayView: View {
     @Environment(\.dismiss) var dismiss
     @State private var goodText: String = ""
     @State private var badText: String = ""
-    private var falseItems: [DayListCell] = [
-        DayListCell(time: "시간", content: "내용", point: "점수"),
-        DayListCell(time: "9:00/\n  10:00", content: "앱 아이디어 생각하기", point: "70"),
-        DayListCell(time: "10:00/\n  12:00", content: "앱 UI 구성하기", point: "70"),
-        DayListCell(time: "12:00/\n  13:00", content: "점심시간", point: "100")
-    ]
+    @State private var priorities: [String] = []
+    @State private var plans: [Plan] = []
+    @State private var showingPriorityView: Bool = false
+    @State private var showingScheduleView: Bool = false
     
     var body: some View {
-        NavigationView {
+        ScrollView {
             VStack {
-                VStack {
+                VStack(alignment: .leading, spacing: 8) {
                     ZStack {
                         Text("오늘의 우선순위")
                             .font(.title2)
                         HStack {
                             Spacer()
                             Button(action: {
-                                
+                                showingPriorityView = true
                             }, label: {
                                 Label("", systemImage: "plus")
                             })
+                            .offset(y: -2)
                             .foregroundStyle(.black)
                         }
                     }
                     .padding(12)
                     
-                    Text("1. UI 야무지게 짜기")
-                    Text("2. 앱 야무지게 개발하기")
+                    ForEach(priorities.indices, id: \.self) { index in
+                        Text("\(index + 1). \(priorities[index])")
+                    }
                 }
                 .padding(12)
                 .background {
@@ -47,7 +47,7 @@ struct DayView: View {
                 }
                 
                 Button(action: {
-                    
+                    showingScheduleView = true
                 }, label: {
                     Text("일정 추가")
                         .frame(maxWidth: .infinity)
@@ -58,16 +58,25 @@ struct DayView: View {
                         .fill(Color(UIColor.systemGray6))
                 }
                 .foregroundStyle(.black)
-                .padding()
                 
-                Spacer()
-                
-                List {
-                    ForEach(falseItems, id: \.time) { item in
-                        DayListCell(time: item.time, content: item.content, point: item.point)
-                            .listRowBackground(Color(UIColor.systemGray6))
+                VStack(alignment: .leading, spacing: 8) {
+                    PlanCell()
+                    
+                    if plans.isEmpty {
+                        Text("등록된 일정이 없습니다.")
+                            .frame(maxHeight: .infinity)
+                            .padding()
+                    }
+                    
+                    ForEach(plans) { plan in
+                        PlanCell(plan: plan)
                     }
                 }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(UIColor.systemGray6))
+                )
                 
                 HStack {
                     Spacer()
@@ -83,21 +92,21 @@ struct DayView: View {
                 HStack {
                     TextEditor(text: $goodText)
                         .clipShape(.rect(cornerRadius: 8))
-                        .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray, lineWidth: 1)
-                            )
-                        .background(Color(UIColor.systemGray6))
+                        .overlay(content: {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(UIColor.systemGray6))
+                        })
                     
                     TextEditor(text: $badText)
                         .clipShape(.rect(cornerRadius: 8))
-                        .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray, lineWidth: 1)
-                            )
-                        .background(Color(UIColor.systemGray6))
+                        .overlay(content: {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(UIColor.systemGray6))
+                        })
                 }
                 .frame(height: 150)
+                
+                Spacer()
             }
         }
         .scrollContentBackground(.hidden)
@@ -112,9 +121,18 @@ struct DayView: View {
                 .foregroundStyle(.black)
             }
         }
+        .sheet(isPresented: $showingPriorityView, content: {
+            PriorityView(priorities: $priorities)
+                .presentationDetents([.height(50)])
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+        })
+        .sheet(isPresented: $showingScheduleView, content: {
+            PlanView(plans: $plans)
+                .presentationDetents([.height(300)])
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+        })
         
     }
-        
 }
 
 #Preview {
