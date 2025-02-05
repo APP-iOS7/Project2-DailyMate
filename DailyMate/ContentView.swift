@@ -12,27 +12,21 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [DayItem]
-    
     // 아이템 추가 알림 표시 여부
     @State private var isPresentingAddSheet = false
-    
     // Error Alert(이미 오늘 날짜가 존재할 때) 표시 여부
     @State private var isPresentingErrorAlert = false
-
     // 새로운 아이템 제목
     @State private var newTitle: String = ""
-
     // 선택된 날짜
     @State private var selectedDate: Date = Date()
-    
     // 상세 화면으로 이동 여부
     @State private var navigateToDetail: Bool = false
-    
     // 새로운 아이템
     @State private var newItem: DayItem?
-
-    @State private var itemToDelete: IndexSet?
-
+    // 삭제할 아이템
+    @State private var itemToDelete: DayItem?
+    // 삭제 확인 알림 표시 여부
     @State private var showingDeleteAlert = false
     
     var body: some View {
@@ -54,8 +48,10 @@ struct ContentView: View {
                         }
                     }
                     .onDelete(perform: { indexSet in
-                        itemToDelete = indexSet
-                        showingDeleteAlert = true
+                        if let index = indexSet.first {
+                            itemToDelete = sortedItems[index]
+                            showingDeleteAlert = true
+                        }
                     })
                 }
                 .navigationTitle(Text("Daily Mate"))
@@ -82,8 +78,8 @@ struct ContentView: View {
                         itemToDelete = nil
                     }
                     Button("삭제", role: .destructive) {
-                        if let indexSet = itemToDelete {
-                            deleteItems(ids: indexSet)
+                        if let item = itemToDelete {
+                            deleteItem(item)
                         }
                         itemToDelete = nil
                     }
@@ -161,13 +157,9 @@ struct ContentView: View {
     }
 
     // 아이템 삭제하는 함수 수정
-    private func deleteItems(ids: IndexSet) {
+    private func deleteItem(_ item: DayItem) {
         withAnimation {
-            ids.forEach { id in
-                if let item = items.first(where: { $0.id == id }) {
-                    modelContext.delete(item)
-                }
-            }
+            modelContext.delete(item)
         }
     }
 }
