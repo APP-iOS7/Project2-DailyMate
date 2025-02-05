@@ -13,9 +13,16 @@ struct DetailView: View {
     
     let item: DayItem
     
-    @State private var goodText: String = ""
-    @State private var badText: String = ""
+    @State private var goodText: String
+    @State private var badText: String
     
+    init(item: DayItem) {
+        self.item = item
+        // 초기값 설정
+        _goodText = State(initialValue: item.good)
+        _badText = State(initialValue: item.bad)
+    }
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -63,11 +70,13 @@ struct DetailView: View {
                 HStack {
                     Spacer()
                     Text("시간")
+                    Spacer()
                     Divider()
                     Spacer()
                     Text("내용")
                     Spacer()
                     Divider()
+                    Spacer()
                     Text("점수")
                     Spacer()
                 }.frame(height: 40)
@@ -77,7 +86,7 @@ struct DetailView: View {
                 }
                 
                 VStack {
-                    Text("좋았던 점")
+                    Text("Good")
                         .font(.title2)
                     Spacer()
                     TextEditor(text: $goodText)
@@ -87,7 +96,7 @@ struct DetailView: View {
                                 .stroke(Color.gray, lineWidth: 1)
                         )
                         .background(Color(UIColor.systemGray6))
-                    Text("나빴던 점")
+                    Text("Bad")
                         .font(.title2)
                     Spacer()
                     TextEditor(text: $badText)
@@ -107,10 +116,14 @@ struct DetailView: View {
         .scrollContentBackground(.hidden)
         .padding()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("2월 4일")
+        .navigationTitle(dateFormatter.string(from: item.timestamp))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("완료", action: {
+                    // 변경된 내용 저장
+                    item.good = goodText
+                    item.bad = badText
+                    try? modelContext.save()
                     dismiss()
                 })
                 .foregroundStyle(.black)

@@ -13,9 +13,14 @@ final class DayItem: Identifiable {
     var id: UUID
     var timestamp: Date
     var title: String
-    init(timestamp: Date, title: String) {
+    var good: String
+    var bad: String
+
+    init(timestamp: Date, title: String, good: String = "", bad: String = "") {
         self.id = UUID()
         self.timestamp = timestamp
         self.title = title
+        self.good = good
+        self.bad = bad
     }
 }
