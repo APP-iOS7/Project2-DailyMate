@@ -11,6 +11,11 @@ struct DetailView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
+    @State private var priorities: [String] = []
+    @State private var plans: [Plan] = []
+    @State private var showingPriorityView: Bool = false
+    @State private var showingScheduleView: Bool = false
+    
     let item: DayItem
     
     @State private var goodText: String
@@ -22,28 +27,30 @@ struct DetailView: View {
         _goodText = State(initialValue: item.good)
         _badText = State(initialValue: item.bad)
     }
-
+    
     var body: some View {
-        NavigationStack {
+        ScrollView {
             VStack {
-                VStack {
+                VStack(alignment: .leading, spacing: 8) {
                     ZStack {
                         Text("오늘의 우선순위")
                             .font(.title2)
                         HStack {
                             Spacer()
                             Button(action: {
-                                
+                                showingPriorityView = true
                             }, label: {
                                 Label("", systemImage: "plus")
                             })
+                            .offset(y: -2)
                             .foregroundStyle(.black)
                         }
                     }
                     .padding(12)
                     
-                    Text("1. UI 야무지게 짜기")
-                    Text("2. 앱 야무지게 개발하기")
+                    ForEach(priorities.indices, id: \.self) { index in
+                        Text("\(index + 1). \(priorities[index])")
+                    }
                 }
                 .padding(12)
                 .background {
@@ -52,7 +59,7 @@ struct DetailView: View {
                 }
                 
                 Button(action: {
-                    
+                    showingScheduleView = true
                 }, label: {
                     Text("일정 추가")
                         .frame(maxWidth: .infinity)
@@ -63,26 +70,35 @@ struct DetailView: View {
                         .fill(Color(UIColor.systemGray6))
                 }
                 .foregroundStyle(.black)
-                .padding()
                 
-                Spacer()
+                VStack(alignment: .leading, spacing: 8) {
+                    PlanCell()
+                    
+                    if plans.isEmpty {
+                        Text("등록된 일정이 없습니다.")
+                            .frame(maxHeight: .infinity)
+                            .padding()
+                    }
+                    
+                    ForEach(plans) { plan in
+                        PlanCell(plan: plan)
+                    }
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(UIColor.systemGray6))
+                )
                 
                 HStack {
                     Spacer()
-                    Text("시간")
+                    Text("Good")
+                        .font(.largeTitle)
                     Spacer()
-                    Divider()
                     Spacer()
-                    Text("내용")
+                    Text("Bad")
+                        .font(.largeTitle)
                     Spacer()
-                    Divider()
-                    Spacer()
-                    Text("점수")
-                    Spacer()
-                }.frame(height: 40)
-                
-                List {
-                    
                 }
                 
                 VStack {
@@ -107,10 +123,24 @@ struct DetailView: View {
                         )
                         .background(Color(UIColor.systemGray6))
                 }
+                //                HStack {
+                //                    TextEditor(text: $goodText)
+                //                        .clipShape(.rect(cornerRadius: 8))
+                //                        .overlay(content: {
+                //                            RoundedRectangle(cornerRadius: 12)
+                //                                .fill(Color(UIColor.systemGray6))
+                //                        })
+                //
+                //                    TextEditor(text: $badText)
+                //                        .clipShape(.rect(cornerRadius: 8))
+                //                        .overlay(content: {
+                //                            RoundedRectangle(cornerRadius: 12)
+                //                                .fill(Color(UIColor.systemGray6))
+                //                        })
+                //                }
+                //                .frame(height: 150)
                 
-                HStack {
-                    
-                }
+                Spacer()
             }
         }
         .scrollContentBackground(.hidden)
@@ -120,17 +150,24 @@ struct DetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("완료", action: {
-                    // 변경된 내용 저장
-                    item.good = goodText
-                    item.bad = badText
-                    try? modelContext.save()
                     dismiss()
                 })
                 .foregroundStyle(.black)
             }
         }
+        .sheet(isPresented: $showingPriorityView, content: {
+            PriorityView(priorities: $priorities)
+                .presentationDetents([.height(50)])
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+        })
+        .sheet(isPresented: $showingScheduleView, content: {
+            PlanView(plans: $plans)
+                .presentationDetents([.height(300)])
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+        })
         
     }
+    
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "M월 d일"

@@ -94,7 +94,7 @@ struct ContentView: View {
                                      selection: $selectedDate,
                                      displayedComponents: .date)
                         }
-                        .navigationTitle("새 항목 추가")
+                        .navigationTitle("날짜 추가")
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
                             ToolbarItem(placement: .cancellationAction) {
