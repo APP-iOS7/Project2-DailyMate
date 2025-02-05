@@ -186,7 +186,14 @@ struct DetailView: View {
             NavigationStack {
                 TextEditor(text: $tempGoodText)
                     .padding()
-                    .navigationTitle("좋았던 점")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(UIColor.systemGray6))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.gray, lineWidth: 1)
+                    )
+                    .navigationTitle("좋았던 점 수정")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -208,7 +215,13 @@ struct DetailView: View {
             NavigationStack {
                 TextEditor(text: $tempBadText)
                     .padding()
-                    .navigationTitle("안좋았던 점")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(UIColor.systemGray6))
+                    // .overlay(
+                    //     RoundedRectangle(cornerRadius: 8)
+                    //         .stroke(Color.gray, lineWidth: 1)
+                    // )
+                    .navigationTitle("안좋았던 점 수정")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
