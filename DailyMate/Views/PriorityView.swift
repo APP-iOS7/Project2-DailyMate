@@ -26,6 +26,8 @@ struct PriorityView: View {
     var body: some View {
         HStack {
             TextField("우선순위를 입력하세요", text: $priority)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
                 .focused($isTextFieldFocused)
             Button(action: addPriority, label: {
                 Label("", systemImage: "paperplane")
@@ -43,7 +45,9 @@ struct PriorityView: View {
         }
         .padding(10)
         .onAppear {
-            isTextFieldFocused = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                isTextFieldFocused = true
+            }
             
             switch mode {
             case .create: break

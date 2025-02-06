@@ -72,27 +72,14 @@ struct DetailView: View {
                         .fill(Color(UIColor.systemGray6))
                 }
                 
-                Button(action: {
-                    planMode = .create
-                    showingPlanView = true
-                }, label: {
-                    Text("일정 추가")
-                        .frame(maxWidth: .infinity)
-                })
-                .frame(height: 50)
-                .background{
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(UIColor.systemGray6))
-                }
-                .foregroundStyle(.black)
-                
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(spacing: 8) {
                     PlanCell()
                     
                     if item.plans.isEmpty {
                         Text("등록된 일정이 없습니다.")
                             .frame(maxHeight: .infinity)
                             .padding()
+                        Divider()
                     }
                     
                     ForEach(item.plans) { plan in
@@ -102,6 +89,16 @@ struct DetailView: View {
                                 showingPlanView = true
                             }
                     }
+                    
+                    Button(action: {
+                        planMode = .create
+                        showingPlanView = true
+                    }, label: {
+                        Text("일정 추가")
+                            .frame(maxWidth: .infinity)
+                    })
+                    .frame(height: 30)
+                    .foregroundStyle(.black)
                 }
                 .padding()
                 .background(
@@ -114,7 +111,7 @@ struct DetailView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Text("좋았던 점")
-                                .font(.title2)
+                                .font(.title3)
                             Spacer()
                             Button(action: {
                                 tempGoodText = goodText
@@ -140,8 +137,8 @@ struct DetailView: View {
                     // Bad Section
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text("안좋았던 점")
-                                .font(.title2)
+                            Text("아쉬웠던 점")
+                                .font(.title3)
                             Spacer()
                             Button(action: {
                                 tempBadText = badText
@@ -168,6 +165,7 @@ struct DetailView: View {
             }
             .padding()
         }
+        .navigationBarBackButtonHidden(true)
         .scrollContentBackground(.hidden)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(dateFormatter.string(from: item.timestamp))
@@ -177,14 +175,11 @@ struct DetailView: View {
                     // 변경된 내용 저장
                     item.good = goodText
                     item.bad = badText
-//                    item.priorities = priorities
-//                    item.plans = plans
                     
                     try? modelContext.save()
-                    
                     dismiss()
                 })
-                .foregroundStyle(.black)
+                .foregroundStyle(.green)
             }
         }
         .sheet(isPresented: $showingPriorityView, content: {
@@ -200,6 +195,8 @@ struct DetailView: View {
         .sheet(isPresented: $isEditingGood) {
             NavigationStack {
                 TextEditor(text: $tempGoodText)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(UIColor.systemGray6))
@@ -229,6 +226,8 @@ struct DetailView: View {
         .sheet(isPresented: $isEditingBad) {
             NavigationStack {
                 TextEditor(text: $tempBadText)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(UIColor.systemGray6))
@@ -236,7 +235,7 @@ struct DetailView: View {
                          RoundedRectangle(cornerRadius: 8)
                              .stroke(Color.gray, lineWidth: 1)
                      )
-                    .navigationTitle("안좋았던 점 수정")
+                    .navigationTitle("아쉬웠던 점 수정")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {

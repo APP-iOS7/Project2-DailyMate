@@ -89,7 +89,9 @@ struct ContentView: View {
                         Button(action: {
                             isPresentingAddSheet = true // sheet 표시
                         }) {
-                            Label("Add Item", systemImage: "plus")
+                            Image(systemName: "plus")
+                                .foregroundStyle(.green)
+                                .bold()
                         }
                     }
                 }
@@ -129,6 +131,7 @@ struct ContentView: View {
                                     newTitle = ""
                                     selectedDate = Date()
                                 }
+                                .tint(.black)
                             }
                             ToolbarItem(placement: .confirmationAction) {
                                 Button("저장") {
@@ -147,6 +150,7 @@ struct ContentView: View {
                                         selectedDate = Date()
                                     }
                                 }
+                                .tint(.green)
                             }
                         }
                         .alert("해당 날짜는 이미 추가되었습니다.", isPresented: $isPresentingErrorAlert) {
@@ -161,6 +165,7 @@ struct ContentView: View {
                         DetailView(item: item)
                     }
                 }
+                
                 
 //                Spacer() // 리스트와 버튼 사이 간격 유지
                 

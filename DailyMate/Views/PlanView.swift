@@ -39,6 +39,8 @@ struct PlanView: View {
                 Text("내용")
                 Spacer()
                 TextEditor(text: $content)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
                     .clipShape(.rect(cornerRadius: 12))
                     .frame(height: 80)
                     .overlay(
@@ -50,6 +52,8 @@ struct PlanView: View {
             HStack(spacing: 20) {
                 Text("점수")
                 TextField("100", text: $point)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
                     .multilineTextAlignment(.trailing)
                     .keyboardType(.numberPad)
                     .padding()
