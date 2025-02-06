@@ -20,11 +20,11 @@ struct SplashView: View {
                 VStack {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 80))
-                        .foregroundColor(.black)
+                        .foregroundColor(.green)
                     Text("Daily Mate")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .foregroundColor(.black)
+                        .foregroundColor(.green)
                 }
                 .scaleEffect(size)
                 .opacity(opacity)
