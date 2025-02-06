@@ -56,9 +56,6 @@ struct ContentView: View {
                 }
                 .navigationTitle(Text("Daily Mate"))
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
-                    }
                     ToolbarItem {
                         Button(action: {
                             isPresentingAddSheet = true // sheet 표시
@@ -110,8 +107,9 @@ struct ContentView: View {
                                         isPresentingErrorAlert = true
                                     } else {
                                         withAnimation {
-                                            let item = DayItem(timestamp: selectedDate, title: newTitle)
+                                            let item = DayItem(timestamp: selectedDate, title: newTitle, priority: [], plan: [], good: "", bad: "")
                                             modelContext.insert(item)
+                                            try? modelContext.save()
                                             newItem = item
                                             navigateToDetail = true
                                         }
