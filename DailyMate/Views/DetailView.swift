@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
-struct DetailView2: View {
+struct DetailView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
-    let item: DayItem
+    @Bindable var item: DayItem
     
     @State private var priorities: [String]
     @State private var plans: [Plan]
@@ -29,11 +30,10 @@ struct DetailView2: View {
     
     init(item: DayItem) {
         self.item = item
-        // 초기값 설정
-        _goodText = State(initialValue: item.good)
-        _badText = State(initialValue: item.bad)
         _priorities = State(initialValue: item.priority)
         _plans = State(initialValue: item.plan)
+        _goodText = State(initialValue: item.good)
+        _badText = State(initialValue: item.bad)
     }
     
     var body: some View {
@@ -173,28 +173,35 @@ struct DetailView2: View {
         .navigationTitle(dateFormatter.string(from: item.timestamp))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("완료", action: {
-                    // 변경된 내용 저장
+                Button("완료") {
                     item.good = goodText
                     item.bad = badText
                     item.priority = priorities
                     item.plan = plans
                     try? modelContext.save()
                     dismiss()
-                })
+                }
                 .foregroundStyle(.black)
             }
         }
-        .sheet(isPresented: $showingPriorityView, content: {
-                    PriorityView(item: item, mode: priorityMode)
-                        .presentationDetents([.height(50)])
-                        .ignoresSafeArea(.keyboard, edges: .bottom)
-                })
-                .sheet(isPresented: $showingPlanView, content: {
-                    PlanView(item: item, mode: planMode)
-                        .presentationDetents([.height(300)])
-                        .ignoresSafeArea(.keyboard, edges: .bottom)
-                })
+        .sheet(isPresented: $showingPriorityView) {
+            PriorityView(item: item, mode: priorityMode)
+                .presentationDetents([.height(50)])
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+                .onChange(of: item.priority) {
+                    priorities = item.priority
+                    try? modelContext.save()
+                }
+        }
+        .sheet(isPresented: $showingPlanView) {
+            PlanView(item: item, mode: planMode)
+                .presentationDetents([.height(300)])
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+                .onChange(of: item.plan) {
+                    plans = item.plan
+                    try? modelContext.save()
+                }
+        }
         .sheet(isPresented: $isEditingGood) {
             NavigationStack {
                 TextEditor(text: $tempGoodText)
@@ -252,7 +259,13 @@ struct DetailView2: View {
             }
             .presentationDetents([.medium])
         }
-        
+        .onAppear {
+            // 화면이 나타날 때마다 최신 데이터로 업데이트
+            priorities = item.priority
+            plans = item.plan
+            goodText = item.good
+            badText = item.bad
+        }
     }
     
     private let dateFormatter: DateFormatter = {

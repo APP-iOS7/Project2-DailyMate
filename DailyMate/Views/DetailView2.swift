@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DetailView: View {
+struct DetailView2: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     

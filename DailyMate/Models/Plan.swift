@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 struct Plan: Codable, Identifiable, Equatable {
     var id: String = UUID().uuidString
