@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum PlanEditMode {
+enum PlanEditMode: Equatable {
     case create
     case update(Plan)
 }
@@ -61,32 +61,37 @@ struct PlanView: View {
                 Spacer()
             }
             
-            Button(action: addPlan, label: {
-                Text("추가하기")
-                    .foregroundStyle(.black)
-            })
-            .frame(maxWidth: .infinity)
-            .frame(height: 60)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(UIColor.systemGray6))
-            )
+            VStack {
+                Button(action: addPlan, label: {
+                    Text(mode == .create ? "추가하기" : "수정하기")
+                        .foregroundStyle(.black)
+                })
+                .frame(maxWidth: .infinity)
+                .frame(height: 60)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(UIColor.systemGray6))
+                )
+            }
         }
         .padding()
+        .onAppear(perform: {
+            switch mode {
+            case .create:
+                start = item.timestamp
+                end = Calendar.current.date(byAdding: .hour, value: 1, to: item.timestamp) ?? item.timestamp
+            case .update(let plan):
+                start = plan.start
+                end = plan.end
+                content = plan.content
+                point = plan.point
+            }
+        })
     }
     
     init(item: DayItem, mode: PlanEditMode) {
         self.item = item
         self.mode = mode
-        
-        switch mode {
-        case .create: break
-        case .update(let plan):
-            _start = State(initialValue: plan.start)
-            _end = State(initialValue: plan.end)
-            _content = State(initialValue: plan.content)
-            _point = State(initialValue: plan.point)
-        }
     }
     
     func addPlan() {
@@ -95,6 +100,7 @@ struct PlanView: View {
         switch mode {
         case .create:
             item.plan.append(newPlan)
+            item.timestamp = end
         case .update(let oldPlan):
             if let index = item.plan.firstIndex(of: oldPlan) {
                 item.plan[index] = newPlan

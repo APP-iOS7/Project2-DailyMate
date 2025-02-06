@@ -20,11 +20,16 @@ final class DayItem: Identifiable {
 
     init(timestamp: Date, title: String, priority: [String] = [], plan: [Plan]=[], good: String = "", bad: String = "") {
         self.id = UUID()
-        self.timestamp = timestamp
         self.title = title
         self.priority = []
         self.plan = []
         self.good = good
         self.bad = bad
+        
+        var components: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: timestamp)
+        components.hour = 9
+        components.minute = 0
+        components.second = 0
+        self.timestamp = Calendar.current.date(from: components) ?? timestamp
     }
 }

@@ -14,10 +14,22 @@ struct PlanCell: View {
         VStack {
             HStack {
                 Text(plan?.time ?? "시간")
-                Spacer()
+                    .frame(width: 80)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: true, vertical: false)
                 Text(plan?.content ?? "내용")
-                Spacer()
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.leading)
                 Text(plan?.point ?? "점수")
+                
+                
+                
+                
+                
+                
+                    .frame(width: 50)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: true, vertical: false)
             }
             Divider()
         }
