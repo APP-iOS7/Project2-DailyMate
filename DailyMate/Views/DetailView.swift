@@ -230,10 +230,10 @@ struct DetailView: View {
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(UIColor.systemGray6))
-                    // .overlay(
-                    //     RoundedRectangle(cornerRadius: 8)
-                    //         .stroke(Color.gray, lineWidth: 1)
-                    // )
+                     .overlay(
+                         RoundedRectangle(cornerRadius: 8)
+                             .stroke(Color.gray, lineWidth: 1)
+                     )
                     .navigationTitle("안좋았던 점 수정")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {

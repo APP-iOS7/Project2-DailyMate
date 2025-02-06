@@ -39,7 +39,17 @@ class PreviewContainer {
         let items: [(String, Date)] = [
             ("프로젝트", today),
             ("코딩테스트", calendar.date(byAdding: .day, value: -1, to: today)!),
-            ("바쁜주말", calendar.date(byAdding: .day, value: -2, to: today)!)
+            ("바쁜주말", calendar.date(byAdding: .day, value: -2, to: today)!),
+            ("프로젝트", calendar.date(byAdding: .day, value: -3, to: today)!),
+            ("코딩테스트", calendar.date(byAdding: .day, value: -4, to: today)!),
+            ("바쁜주말", calendar.date(byAdding: .day, value: -5, to: today)!),
+            ("프로젝트", calendar.date(byAdding: .day, value: -6, to: today)!),
+            ("코딩테스트", calendar.date(byAdding: .day, value: -7, to: today)!),
+            ("바쁜주말", calendar.date(byAdding: .day, value: -8, to: today)!),
+            ("바쁜주말", calendar.date(byAdding: .day, value: -9, to: today)!),
+            ("프로젝트", calendar.date(byAdding: .day, value: -10, to: today)!),
+            ("코딩테스트", calendar.date(byAdding: .day, value: -11, to: today)!),
+            ("바쁜주말", calendar.date(byAdding: .day, value: -12, to: today)!)
         ]
         
         for (title, date) in items {
