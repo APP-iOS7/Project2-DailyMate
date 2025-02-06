@@ -19,8 +19,9 @@ struct PlanView: View {
     @State private var end: Date = Date()
     @State private var content: String = ""
     @State private var point: String = ""
+    @Binding var mode: PlanEditMode
+    
     let item: DayItem
-    let mode: PlanEditMode
     
     var body: some View {
         VStack(spacing: 20) {
@@ -61,7 +62,7 @@ struct PlanView: View {
                 Spacer()
             }
             
-            VStack {
+            HStack {
                 Button(action: addPlan, label: {
                     Text(mode == .create ? "추가하기" : "수정하기")
                         .foregroundStyle(.black)
@@ -72,6 +73,18 @@ struct PlanView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color(UIColor.systemGray6))
                 )
+                
+                if case .update = mode {
+                    Button(action: removePlan, label: {
+                        Text("삭제하기")
+                            .foregroundStyle(.white)
+                    })
+                    .frame(width: 100, height: 60)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.red.opacity(0.8))
+                    )
+                }
             }
         }
         .padding()
@@ -89,25 +102,32 @@ struct PlanView: View {
         })
     }
     
-    init(item: DayItem, mode: PlanEditMode) {
-        self.item = item
-        self.mode = mode
-    }
-    
     func addPlan() {
         let newPlan: Plan = Plan(start: start, end: end, content: content, point: point)
         
         switch mode {
         case .create:
-            item.plan.append(newPlan)
+            item.plans.append(newPlan)
             item.timestamp = end
         case .update(let oldPlan):
-            if let index = item.plan.firstIndex(of: oldPlan) {
-                item.plan[index] = newPlan
+            if let index = item.plans.firstIndex(of: oldPlan) {
+                item.plans[index] = newPlan
             }
         }
         
         try? modelContext.save()
+        dismiss()
+    }
+    
+    func removePlan() {
+        switch mode {
+        case .create: return
+        case .update(let oldPlan):
+            if let index = item.plans.firstIndex(of: oldPlan) {
+                item.plans.remove(at: index)
+                try? modelContext.save()
+            }
+        }
         dismiss()
     }
 }

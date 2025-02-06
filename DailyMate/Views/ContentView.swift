@@ -57,14 +57,17 @@ struct ContentView: View {
                 })
             }
             .scrollContentBackground(.hidden)
-            .navigationTitle(Text("Daily Mate"))
             .toolbar {
-                ToolbarItem {
+                ToolbarItem(placement: .topBarLeading) {
+                    Text("DailyMate")
+                        .font(.custom("Chalkboard SE", size: 40))
+                        .bold()
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         isPresentingAddSheet = true // sheet 표시
                     }) {
                         Label("Add Item", systemImage: "plus")
-                        
                     }
                 }
             }
@@ -93,6 +96,7 @@ struct ContentView: View {
                         DatePicker("날짜 선택",
                                    selection: $selectedDate,
                                    displayedComponents: .date)
+                            .environment(\.locale, Locale(identifier: "ko_KR"))
                     }
                     .navigationTitle("날짜 추가")
                     .navigationBarTitleDisplayMode(.inline)
@@ -110,7 +114,7 @@ struct ContentView: View {
                                     isPresentingErrorAlert = true
                                 } else {
                                     withAnimation {
-                                        let item = DayItem(timestamp: selectedDate, title: newTitle, priority: [], plan: [], good: "", bad: "")
+                                        let item = DayItem(timestamp: selectedDate, title: newTitle, good: "", bad: "")
                                         modelContext.insert(item)
                                         try? modelContext.save()
                                         newItem = item

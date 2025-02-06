@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-enum PriorityEditMode: Equatable {
+enum PriorityEditMode {
     case create
     case update(String)
 }
@@ -18,45 +18,65 @@ struct PriorityView: View {
     @Environment(\.modelContext) private var modelContext
     
     @State private var priority: String = ""
+    @Binding var mode: PriorityEditMode
     var item: DayItem
-    var mode: PriorityEditMode
-    //@FocusState private var isTextFieldFocused: Bool
+    
+    @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
         HStack {
             TextField("우선순위를 입력하세요", text: $priority)
-                //.focused($isTextFieldFocused)
+                .focused($isTextFieldFocused)
             Button(action: addPriority, label: {
                 Label("", systemImage: "paperplane")
             })
-            .frame(width: 50, height: 50)
+            .frame(width: 40, height: 40)
             .foregroundStyle(.black)
+            
+            if case .update = mode {
+                Button(action: removePriority, label: {
+                    Label("", systemImage: "trash")
+                })
+                .frame(width: 30, height: 40)
+                .foregroundStyle(.red)
+            }
         }
         .padding(10)
-    }
-    
-    init(item: DayItem, mode: PriorityEditMode) {
-        self.item = item
-        self.mode = mode
-        
-        switch mode {
-        case .create: break
-        case .update(let priority):
-            _priority = State(initialValue: priority)
+        .onAppear {
+            isTextFieldFocused = true
+            
+            switch mode {
+            case .create: break
+            case .update(let oldValue):
+                priority = oldValue
+            }
         }
     }
     
     func addPriority() {
         switch mode {
         case .create:
-            if (!priority.isEmpty) { item.priority.append(priority) }
+            if (!priority.isEmpty) { item.priorities.append(priority) }
         case .update(let oldPriority):
-            if let index = item.priority.firstIndex(of: oldPriority) {
-                item.priority[index] = priority
+            if let index = item.priorities.firstIndex(of: oldPriority) {
+                item.priorities[index] = priority
             }
         }
         
         try? modelContext.save()
+        dismiss()
+    }
+    
+    func removePriority() {
+        switch mode {
+        case .create: return
+        case .update(let oldPriority):
+            if let index = item.priorities.firstIndex(of: oldPriority) {
+                item.priorities.remove(at: index)
+                try? modelContext.save()
+            }
+        }
+        
         dismiss()
     }
 }

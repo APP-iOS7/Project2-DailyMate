@@ -32,8 +32,8 @@ struct DetailView: View {
         // 초기값 설정
         _goodText = State(initialValue: item.good)
         _badText = State(initialValue: item.bad)
-        _priorities = State(initialValue: item.priority)
-        _plans = State(initialValue: item.plan)
+        _priorities = State(initialValue: item.priorities)
+        _plans = State(initialValue: item.plans)
     }
     
     var body: some View {
@@ -58,10 +58,10 @@ struct DetailView: View {
                     }
                     .padding(12)
                     
-                    ForEach(item.priority.indices, id: \.self) { index in
-                        Text("\(index + 1). \(item.priority[index])")
+                    ForEach(item.priorities.indices, id: \.self) { index in
+                        Text("\(index + 1). \(item.priorities[index])")
                             .onTapGesture {
-                                priorityMode = .update(item.priority[index])
+                                priorityMode = .update(item.priorities[index])
                                 showingPriorityView = true
                             }
                     }
@@ -89,13 +89,13 @@ struct DetailView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     PlanCell()
                     
-                    if item.plan.isEmpty {
+                    if item.plans.isEmpty {
                         Text("등록된 일정이 없습니다.")
                             .frame(maxHeight: .infinity)
                             .padding()
                     }
                     
-                    ForEach(item.plan) { plan in
+                    ForEach(item.plans) { plan in
                         PlanCell(plan: plan)
                             .onTapGesture {
                                 planMode = .update(plan)
@@ -177,21 +177,23 @@ struct DetailView: View {
                     // 변경된 내용 저장
                     item.good = goodText
                     item.bad = badText
-                    item.priority = priorities
-                    item.plan = plans
+//                    item.priorities = priorities
+//                    item.plans = plans
+                    
                     try? modelContext.save()
+                    
                     dismiss()
                 })
                 .foregroundStyle(.black)
             }
         }
         .sheet(isPresented: $showingPriorityView, content: {
-            PriorityView(item: item, mode: priorityMode)
-                .presentationDetents([.height(50)])
+            PriorityView(mode: $priorityMode, item: item)
+                .presentationDetents([.height(30)])
                 .ignoresSafeArea(.keyboard, edges: .bottom)
         })
         .sheet(isPresented: $showingPlanView, content: {
-            PlanView(item: item, mode: planMode)
+            PlanView(mode: $planMode, item: item)
                 .presentationDetents([.height(300)])
                 .ignoresSafeArea(.keyboard, edges: .bottom)
         })
