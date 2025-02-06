@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DetailView2: View {
+struct DetailView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
@@ -186,15 +186,15 @@ struct DetailView2: View {
             }
         }
         .sheet(isPresented: $showingPriorityView, content: {
-                    PriorityView(item: item, mode: priorityMode)
-                        .presentationDetents([.height(50)])
-                        .ignoresSafeArea(.keyboard, edges: .bottom)
-                })
-                .sheet(isPresented: $showingPlanView, content: {
-                    PlanView(item: item, mode: planMode)
-                        .presentationDetents([.height(300)])
-                        .ignoresSafeArea(.keyboard, edges: .bottom)
-                })
+            PriorityView(item: item, mode: priorityMode)
+                .presentationDetents([.height(50)])
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+        })
+        .sheet(isPresented: $showingPlanView, content: {
+            PlanView(item: item, mode: planMode)
+                .presentationDetents([.height(300)])
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+        })
         .sheet(isPresented: $isEditingGood) {
             NavigationStack {
                 TextEditor(text: $tempGoodText)
