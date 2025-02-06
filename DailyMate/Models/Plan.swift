@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Plan: Codable, Identifiable, Equatable {
-    var id: String = UUID().uuidString
+@Model
+final class Plan: Identifiable {
+    var id: String
     var start: Date
     var end: Date
     var content: String
@@ -20,5 +22,13 @@ struct Plan: Codable, Identifiable, Equatable {
         formatter.locale = Locale(identifier: "ko_KR")
         
         return "\(formatter.string(from: start))/\n   \(formatter.string(from: end))"
+    }
+    
+    init(id: String = UUID().uuidString, start: Date, end: Date, content: String, point: String) {
+        self.id = id
+        self.start = start
+        self.end = end
+        self.content = content
+        self.point = point
     }
 }

@@ -11,7 +11,7 @@ struct DetailView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
-    let item: DayItem
+    @Bindable var item: DayItem
     
     @State private var priorities: [String]
     @State private var plans: [Plan]
@@ -173,17 +173,24 @@ struct DetailView: View {
         .navigationTitle(dateFormatter.string(from: item.timestamp))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("완료", action: {
-                    // 변경된 내용 저장
+                Button("완료") {
                     item.good = goodText
                     item.bad = badText
                     item.priority = priorities
                     item.plan = plans
                     try? modelContext.save()
                     dismiss()
-                })
+                }
                 .foregroundStyle(.black)
             }
+        }
+        .onChange(of: item.priority) {
+            priorities = item.priority
+            try? modelContext.save()
+        }
+        .onChange(of: item.plan) {
+            plans = item.plan
+            try? modelContext.save()
         }
         .sheet(isPresented: $showingPriorityView, content: {
             PriorityView(item: item, mode: priorityMode)
