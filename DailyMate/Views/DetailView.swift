@@ -22,7 +22,10 @@ struct DetailView: View {
     @State private var tempGoodText: String = ""
     @State private var tempBadText: String = ""
     @State private var showingPriorityView: Bool = false
-    @State private var showingScheduleView: Bool = false
+    @State private var showingPlanView: Bool = false
+    
+    @State private var priorityMode: PriorityEditMode = .create
+    @State private var planMode: PlanEditMode = .create
     
     init(item: DayItem) {
         self.item = item
@@ -44,6 +47,7 @@ struct DetailView: View {
                         HStack {
                             Spacer()
                             Button(action: {
+                                priorityMode = .create
                                 showingPriorityView = true
                             }, label: {
                                 Label("", systemImage: "plus")
@@ -54,8 +58,12 @@ struct DetailView: View {
                     }
                     .padding(12)
                     
-                    ForEach(priorities.indices, id: \.self) { index in
-                        Text("\(index + 1). \(priorities[index])")
+                    ForEach(item.priority.indices, id: \.self) { index in
+                        Text("\(index + 1). \(item.priority[index])")
+                            .onTapGesture {
+                                priorityMode = .update(item.priority[index])
+                                showingPriorityView = true
+                            }
                     }
                 }
                 .padding(12)
@@ -65,7 +73,8 @@ struct DetailView: View {
                 }
                 
                 Button(action: {
-                    showingScheduleView = true
+                    planMode = .create
+                    showingPlanView = true
                 }, label: {
                     Text("일정 추가")
                         .frame(maxWidth: .infinity)
@@ -80,14 +89,18 @@ struct DetailView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     PlanCell()
                     
-                    if plans.isEmpty {
+                    if item.plan.isEmpty {
                         Text("등록된 일정이 없습니다.")
                             .frame(maxHeight: .infinity)
                             .padding()
                     }
                     
-                    ForEach(plans) { plan in
+                    ForEach(item.plan) { plan in
                         PlanCell(plan: plan)
+                            .onTapGesture {
+                                planMode = .update(plan)
+                                showingPlanView = true
+                            }
                     }
                 }
                 .padding()
@@ -173,12 +186,12 @@ struct DetailView: View {
             }
         }
         .sheet(isPresented: $showingPriorityView, content: {
-            PriorityView(priorities: $priorities)
+            PriorityView(item: item, mode: priorityMode)
                 .presentationDetents([.height(50)])
                 .ignoresSafeArea(.keyboard, edges: .bottom)
         })
-        .sheet(isPresented: $showingScheduleView, content: {
-            PlanView(plans: $plans)
+        .sheet(isPresented: $showingPlanView, content: {
+            PlanView(item: item, mode: planMode)
                 .presentationDetents([.height(300)])
                 .ignoresSafeArea(.keyboard, edges: .bottom)
         })

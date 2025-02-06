@@ -6,11 +6,20 @@
 //
 
 import SwiftUI
+import SwiftData
+
+enum PriorityEditMode: Equatable {
+    case create
+    case update(String)
+}
 
 struct PriorityView: View {
-    @State private var priority: String = ""
-    @Binding var priorities: [String]
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    
+    @State private var priority: String = ""
+    var item: DayItem
+    var mode: PriorityEditMode
     //@FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
@@ -24,15 +33,30 @@ struct PriorityView: View {
             .foregroundStyle(.black)
         }
         .padding(10)
-        .onAppear(perform: {
-            //isTextFieldFocused = true
-        })
+    }
+    
+    init(item: DayItem, mode: PriorityEditMode) {
+        self.item = item
+        self.mode = mode
+        
+        switch mode {
+        case .create: break
+        case .update(let priority):
+            _priority = State(initialValue: priority)
+        }
     }
     
     func addPriority() {
-        if (!priority.isEmpty) {
-            priorities.append(priority)
-            dismiss()
+        switch mode {
+        case .create:
+            if (!priority.isEmpty) { item.priority.append(priority) }
+        case .update(let oldPriority):
+            if let index = item.priority.firstIndex(of: oldPriority) {
+                item.priority[index] = priority
+            }
         }
+        
+        try? modelContext.save()
+        dismiss()
     }
 }
