@@ -75,9 +75,9 @@ git clone https://github.com/APP-iOS7/Project2-DailyMate.git
 ## 팀원 소개
 | 역할 | 이름 | Github |
 | --- | --- | --- |
-| 메인 뷰 기능 | [@Hyuk](https://github.com/Hyuk) |
-| 상세 뷰 기능 | [@cty7574](https://github.com/cty7574)
-| 행운의 메시지 기능 | [@cheon-subin](https://github.com/cheon-subin)
+| 메인 뷰 기능 | 송혁호 | [@Hyuk](https://github.com/Hyuk) |
+| 상세 뷰 기능 | 조태연 | [@cty7574](https://github.com/cty7574)
+| 행운의 메시지 기능 | 천수빈 | [@cheon-subin](https://github.com/cheon-subin)
 
 
 ## 개발 환경
