@@ -31,7 +31,7 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 
 - 하루의 우선순위 항목 추가/수정
 - 순서대로 우선순위 표시
-- 터치로 간편한 수정
+- 터치로 간편한 수정 및 삭제
 
 ### 3. 일정 관리
 
@@ -52,8 +52,11 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 
 ## 기술 스택
 
-- SwiftUI
-- SwiftData
+- 언어: Swift
+- 통합 개발 환경: Xcode
+- 프레임워크: SwiftUI
+- 데이터베이스: SwiftData
+- 버전 관리: Git, GitHub
 
 ## 주요 구현사항
 
@@ -61,6 +64,21 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 - 커스텀 뷰 컴포넌트 구현
 - 직관적인 사용자 인터페이스
 - 스플래시 화면 애니메이션
+
+## 사용 방법
+
+1. Repository를 clone 해서 Xcode에서 열어 Command + R 단축키로 실행합니다.
+```bash
+git clone https://github.com/APP-iOS7/Project2-DailyMate.git
+```
+
+## 팀원 소개
+| 역할 | 이름 | Github |
+| --- | --- | --- |
+| 메인 뷰 기능 | [@Hyuk](https://github.com/Hyuk) |
+| 상세 뷰 기능 | [@cty7574](https://github.com/cty7574)
+| 행운의 메시지 기능 | [@cheon-subin](https://github.com/cheon-subin)
+
 
 ## 개발 환경
 
