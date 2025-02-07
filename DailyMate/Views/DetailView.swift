@@ -212,12 +212,14 @@ struct DetailView: View {
                             Button("취소") {
                                 isEditingGood = false
                             }
+                            .tint(.green)
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button("확인") {
                                 goodText = tempGoodText
                                 isEditingGood = false
                             }
+                            .tint(.green)
                         }
                     }
             }
