@@ -2,6 +2,20 @@
 
 Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매일의 우선순위, 일정, 좋았던 점과 아쉬웠던 점을 기록하여 하루를 더 의미있게 만들어줍니다.
 
+## 스크린샷
+
+![애플리케이션 로딩 화면](./images/dailymate-01.png)
+![애플리케이션 로딩 화면](./images/dailymate-02.png)
+![애플리케이션 로딩 화면](./images/dailymate-03.png)
+![애플리케이션 로딩 화면](./images/dailymate-04.png)
+![애플리케이션 로딩 화면](./images/dailymate-05.png)
+
+## Figma 디자인 초안
+
+![Figma 디자인 초안](./images/hyuk-figma-design.webp)
+![Figma 디자인 초안](./images/cty7574-figma-design.webp)
+![Figma 디자인 초안](./images/cheon-subin-figma-design.webp)
+
 ## 주요 기능
 
 ### 1. 일일 기록 관리
@@ -26,7 +40,7 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 
 - 좋았던 점 기록
 - 아쉬웠던 점 기록
-- 간편한 수정 기능
+- 간편한 수정 및 삭제 기능
 
 ### 5. 행운의 메시지
 
@@ -37,26 +51,21 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 
 - SwiftUI
 - SwiftData
-- iOS 17.0+
 
 ## 주요 구현사항
 
-- MVVM 아키텍처 패턴 적용
 - SwiftData를 활용한 영구 데이터 저장
 - 커스텀 뷰 컴포넌트 구현
 - 직관적인 사용자 인터페이스
 - 스플래시 화면 애니메이션
 
-## 스크린샷
-
-[스크린샷 이미지들 추가 예정]
-
 ## 개발 환경
 
-- Xcode 15.0+
-- iOS 17.0+
-- Swift 5.9+
+- Xcode 16.2
+- iOS 18.0
+- Swift 6
 
 ## 라이센스
 
 이 프로젝트는 MIT 라이센스를 따릅니다.
+
