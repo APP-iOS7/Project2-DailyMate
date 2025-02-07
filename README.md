@@ -1,8 +1,8 @@
-# Daily Mate
+# :tada: Daily Mate
 
 Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매일의 우선순위, 일정, 좋았던 점과 아쉬웠던 점을 기록하여 하루를 더 의미있게 만들어줍니다.
 
-## 스크린샷
+## :camera: 스크린샷
 
 <div style="display: flex">
 <img src="./images/dailymate-01.png" width="150" />
@@ -12,14 +12,14 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 <img src="./images/dailymate-04.png" width="150" />
 </div>
 
-## Figma 디자인 초안
+## :art: Figma 디자인 초안
 <div style="display: flex; justify-content: flex-start; align-items: flex-start;">
 <img src="./images/hyuk-figma-design.webp" width="250" />
 <img src="./images/cty7574-figma-design.webp" width="250" />
 <img src="./images/cheon-subin-figma-design.webp" width="250" />
 </div>
 
-## 주요 기능
+## :airplane: 주요 기능
 
 ### 1. 일일 기록 관리
 
@@ -50,7 +50,7 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 - 랜덤 행운 메시지 제공
 - 사용자에게 동기부여 메시지 전달
 
-## 기술 스택
+## :pencil: 기술 스택
 
 - 언어: Swift
 - 통합 개발 환경: Xcode
@@ -58,21 +58,21 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 - 데이터베이스: SwiftData
 - 버전 관리: Git, GitHub
 
-## 주요 구현사항
+## :iphone: 주요 구현사항
 
 - SwiftData를 활용한 영구 데이터 저장
 - 커스텀 뷰 컴포넌트 구현
 - 직관적인 사용자 인터페이스
 - 스플래시 화면 애니메이션
 
-## 사용 방법
+## :fork_and_knife: 사용 방법
 
 1. Repository를 clone 해서 Xcode에서 열어 Command + R 단축키로 실행합니다.
 ```bash
 git clone https://github.com/APP-iOS7/Project2-DailyMate.git
 ```
 
-## 팀원 소개
+## :raised_hands: 팀원 소개
 | 역할 | 이름 | Github |
 | --- | --- | --- |
 | 메인 뷰 기능 | 송혁호 | [@Hyuk](https://github.com/Hyuk) |
@@ -80,13 +80,13 @@ git clone https://github.com/APP-iOS7/Project2-DailyMate.git
 | 행운의 메시지 기능 | 천수빈 | [@cheon-subin](https://github.com/cheon-subin)
 
 
-## 개발 환경
+## :computer: 개발 환경
 
 - Xcode 16.2
 - iOS 18.0
 - Swift 6
 
-## 라이센스
+## :scroll: 라이센스
 
 이 프로젝트는 MIT 라이센스를 따릅니다.
 
