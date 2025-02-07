@@ -13,10 +13,11 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 </div>
 
 ## Figma 디자인 초안
-
+<div style="display: flex">
 <img src="./images/hyuk-figma-design.webp" width="300" />
 <img src="./images/cty7574-figma-design.webp" width="300" />
 <img src="./images/cheon-subin-figma-design.webp" width="300" />
+</div>
 
 ## 주요 기능
 
