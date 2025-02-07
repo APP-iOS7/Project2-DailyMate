@@ -5,18 +5,18 @@ Daily Mate는 일상의 계획과 회고를 기록하는 iOS 앱입니다. 매�
 ## 스크린샷
 
 <div style="display: flex">
-<img src="./images/dailymate-01.png" width="150" />
-<img src="./images/dailymate-02.png" width="150" />
-<img src="./images/dailymate-03.png" width="150" />
-<img src="./images/dailymate-04.png" width="150" />
-<img src="./images/dailymate-05.png" width="150" />
+<img src="./images/dailymate-01.png" width="180" />
+<img src="./images/dailymate-02.png" width="180" />
+<img src="./images/dailymate-03.png" width="180" />
+<img src="./images/dailymate-05.png" width="180" />
+<img src="./images/dailymate-04.png" width="180" />
 </div>
 
 ## Figma 디자인 초안
 
-<img src="./images/hyuk-figma-design.webp" width="600" />
-<img src="./images/cty7574-figma-design.webp" width="600" />
-<img src="./images/cheon-subin-figma-design.webp" width="600" />
+<img src="./images/hyuk-figma-design.webp" width="300" />
+<img src="./images/cty7574-figma-design.webp" width="300" />
+<img src="./images/cheon-subin-figma-design.webp" width="300" />
 
 ## 주요 기능
 
